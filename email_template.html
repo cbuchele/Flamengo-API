@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmação de Reserva</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #1f2937;
+      color: #ffffff;
+      padding: 10px;
+      text-align: center;
+      border-radius: 8px 8px 0 0;
+    }
+    .content {
+      padding: 20px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .footer p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Confirmação de Reserva</h1>
+    </div>
+    <div class="content">
+      <p>Olá,</p>
+      <p>Sua reserva foi confirmada com sucesso para o ônibus ID: ${onibus_id}.</p>
+      <p>Detalhes da reserva:</p>
+      <ul>
+        <li>ID do Cliente: ${client_id}</li>
+        <li>Poltronas Reservadas: ${seats}</li>
+      </ul>
+      <p>Um email detalhado com as informações da sua reserva será enviado em breve.</p>
+      <p>Obrigado por escolher nossos serviços. Tenha uma ótima viagem!</p>
+    </div>
+    <div class="footer">
+      <p>© 2024 Todos os direitos reservados.</p>
+    </div>
+  </div>
+</body>
+</html>
+
