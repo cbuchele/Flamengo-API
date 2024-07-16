@@ -1,5 +1,5 @@
 
-from sqlalchemy import Boolean, Column, String, TIMESTAMP, Integer, ForeignKey, DateTime
+from sqlalchemy import Boolean, Column, String, TIMESTAMP, Integer, ForeignKey, DateTime, JSON
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -73,7 +73,7 @@ class Payment(Base):
     transaction_amount = Column(Integer)
     email = Column(String(100))
     approved = Column(Boolean(), default=False)
-    seats = Column(JSON)  # Store seats information as JSON
+    seats = Column(JSON)  # Store seats information as JSON row:[0,1,2,3,4,5],column:[0,1,2,3,4,5]
 
 
     client = relationship("Client", back_populates="payments")

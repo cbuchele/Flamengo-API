@@ -1,5 +1,5 @@
 
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, Json
 from typing import List, Optional, Dict
 
 class ReservationDetails(BaseModel):
@@ -101,5 +101,4 @@ class DBPaymentData(BaseModel):
     status: str
     timestamp: str
     approved: str
-    seat_row: int
-    seat_column: int
+    seats: List[Seat]

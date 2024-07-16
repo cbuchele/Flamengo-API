@@ -313,19 +313,24 @@ def process_payment_confirmation(payment: models.Payment, db: Session):
         payment.status = 'approved'
         db.commit()
 
-        # Create reservations in your database
-        reservation = models.Reservation(
-            id=str(uuid.uuid4()),  # Convert UUID to string for ORM compatibility
-            client_id=payment.client_id,
-            onibus_id=payment.onibus_id,
-            seat_row=payment.seat_row,
-            seat_column=payment.seat_column,
-        )
-        db.add(reservation)
+        reservations = []
+        for seat in payment.seats:
+            new_reservation = models.Reservation(
+                id=str(uuid.uuid4()),  # Convert UUID to string for ORM compatibility
+                client_id=payment.client_id,
+                onibus_id=payment.onibus_id,
+                seat_row=seat['row'],
+                seat_column=seat['column'],
+                timestamp=datetime.now()
+            )
+            # Create reservations in your database
+            db.add(new_reservation)
+            reservations.append(new_reservation)
+
         db.commit()
 
         # Send confirmation email
-        seats = [f"{payment.seat_row},{payment.seat_column}"]
+        seats = [f"{seat['row']},{seat['column']}" for seat in payment.seats]
         send_confirmation_email_monitor(payment.client_id, payment.onibus_id, payment.email, seats)
 
     except Exception as e:
@@ -375,8 +380,7 @@ def create_db_payment(payment_data: DBPaymentData, db: Session = Depends(get_db)
         payment_id=str(payment_data.payment_id),
         email=str(payment_data.email),
         status="pending",
-        seat_row=str(payment_data.seat_row),  # Convert to string explicitly if necessary
-        seat_column=str(payment_data.seat_column),  # Convert to string explicitly if necessary
+        seats=[seat.model_dump() for seat in payment_data.seats],  # Store seats as JSON  # Convert to string explicitly if necessary
         transaction_amount=float(payment_data.transaction_amount),  # Ensure amount is converted appropriately
         approved=approved,
         timestamp=datetime.now()  # No need to convert to string explicitly
