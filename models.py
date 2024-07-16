@@ -73,8 +73,7 @@ class Payment(Base):
     transaction_amount = Column(Integer)
     email = Column(String(100))
     approved = Column(Boolean(), default=False)
-    seat_row = Column(Integer)
-    seat_column = Column(Integer)
+    seats = Column(JSON)  # Store seats information as JSON
 
 
     client = relationship("Client", back_populates="payments")
