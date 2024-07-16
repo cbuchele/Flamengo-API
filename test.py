@@ -338,33 +338,25 @@ def process_payment_confirmation(payment: models.Payment, db: Session):
 
 def send_confirmation_email_monitor(client_id: str, onibus_id: str, email: str, seats: list):
     try:
-        # Debugging statements
-        print(f"client_id: {client_id}")
-        print(f"onibus_id: {onibus_id}")
-        print(f"email: {email}")
-        print(f"seats: {seats}")
+        # Load the email template
+        template = load_template()
 
-        if not seats or not isinstance(seats, list):
-            raise ValueError("Seats list is empty or None or not a list")
-        
-        subject = "Your Reservation Confirmation"
-        body = f"""
-        <h1>Reservation Confirmation</h1>
-        <p>Dear {client_id},</p>
-        <p>Your reservation for the bus with ID {onibus_id} has been confirmed.</p>
-        <p>Seats:</p>
-        <ul>
-        {"".join([f"<li>{seat}</li>" for seat in seats])}
-        </ul>
-        <p>Thank you for choosing our service!</p>
-        """
+        # Ensure seats are converted to strings
+        seats_str = [f"{seat['row']},{seat['column']}" for seat in seats]
 
-        print(f"Email body: {body}")  # Debugging statement
+        # Render the email content
+        email_content = template.substitute(
+            client_id=client_id,
+            onibus_id=onibus_id,
+            seats=", ".join(seats_str),
+        )
 
-        send_email(email, subject, body)
+        # Send the email
+        send_email(email, "Confirmação de Reserva", email_content)
+
     except Exception as e:
-        print(f"Error in send_confirmation_email: {e}")  # Debugging statement
         raise HTTPException(status_code=500, detail=f"Error sending confirmation email: {str(e)}")
+
         
 
 # Create Database Payment
