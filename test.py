@@ -338,25 +338,22 @@ def process_payment_confirmation(payment: models.Payment, db: Session):
 
 def send_confirmation_email_monitor(client_id: str, onibus_id: str, email: str, seats: list):
     try:
-        # Load the email template
-        template = load_template()
+        subject = "Sua Reserva foi Confirmada"
+        body = f"""
+        <h1>Excursões Flamengo - Reserva Confirmada</h1>
+        <p>ID do Cliente: {client_id},</p>
+        <p>Por favor, traga este e-mail impresso, em PDF ou captura de tela com você.</p>
+        <p>Sua reserva para o ônibus com ID {onibus_id} foi confirmada.</p>
+        <p>Assentos:</p>
+        <ul>
+        {"".join([f"<li>{seat}</li>" for seat in seats])}
+        </ul>
+        <p>Obrigado por escolher nosso serviço!</p>
+        """
 
-        # Ensure seats are converted to strings
-        seats_str = [f"{seat['row']},{seat['column']}" for seat in seats]
-
-        # Render the email content
-        email_content = template.substitute(
-            client_id=client_id,
-            onibus_id=onibus_id,
-            seats=", ".join(seats_str),
-        )
-
-        # Send the email
-        send_email(email, "Confirmação de Reserva", email_content)
-
+        send_email(email, subject, body)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error sending confirmation email: {str(e)}")
-
+        raise HTTPException(status_code=500, detail=f"Erro ao enviar e-mail de confirmação: {str(e)}")
         
 
 # Create Database Payment
